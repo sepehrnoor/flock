@@ -10,7 +10,6 @@ public class Bird {
     public Vector2D position, velocity;
     public double startingSpeed = 5;
     public int id;
-    public double maxSpeed = 10;
     public Color color;
 
     public Bird(double x, double y, int id) {

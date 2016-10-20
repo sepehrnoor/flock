@@ -15,6 +15,8 @@ public class Simulation extends JFrame implements Runnable {
     long lastUpdateTime = 0;
     final long frameWait = 17;
     final int windowSize = 1000;
+    boolean windowBounce = true;
+    public double maxSpeed = 20;
     BufferStrategy strategy;
 
     public double avoidRange = 10,
@@ -58,7 +60,29 @@ public class Simulation extends JFrame implements Runnable {
             newB.velocity = newB.velocity.add(getAvoidanceVector(newB));
             newB.velocity = newB.velocity.add(getGravityVector(newB));
             newB.velocity = newB.velocity.scale(totalMult);
+            newB.velocity = newB.velocity.clip(maxSpeed);
             newB.step();
+            if (windowBounce) {
+                if (newB.position.getX() < 0) {
+                    newB.position = new Vector2D(0, newB.position.getY());
+                    newB.velocity = new Vector2D(-newB.velocity.getX(), newB.velocity.getY());
+                }
+
+                if (newB.position.getX() > windowSize) {
+                    newB.position = new Vector2D(windowSize, newB.position.getY());
+                    newB.velocity = new Vector2D(-newB.velocity.getX(), newB.velocity.getY());
+                }
+
+                if (newB.position.getY() < 0) {
+                    newB.position = new Vector2D(newB.position.getX(), 0);
+                    newB.velocity = new Vector2D(newB.velocity.getX(), -newB.velocity.getY());
+                }
+
+                if (newB.position.getY() > windowSize) {
+                    newB.position = new Vector2D(newB.position.getX(), windowSize);
+                    newB.velocity = new Vector2D(newB.velocity.getX(), -newB.velocity.getY());
+                }
+            }
             newBirds.add(newB);
         }
 
@@ -85,7 +109,7 @@ public class Simulation extends JFrame implements Runnable {
     }
 
     Vector2D getGravityVector(Bird b) {
-        return b.position.difference(centerVector(b)).scale(1.0 / 100); //move a 100th of the way towards middle
+        return b.position.difference(centerVector(b)).scale(1.0 / 100); //gain momentum towards middle of flock
     }
 
     List<Bird> getBirdsInRange(Bird b, double range) {
