@@ -1,3 +1,4 @@
-By Sepehr Noorzadeh, 2016
-A simple boids-like simulation in java, initially created without following any psuedo-code (which turned out to be a mistake).
-I'll update this when I have time.
+# Flock
+
+A simple boids-like simulation in java.
+Available commands: pause, resume, step, exit (quit), help (?), bounce, maxspeed
